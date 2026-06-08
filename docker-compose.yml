@@ -1,0 +1,157 @@
+services:
+  postgres-user:
+    image: postgres:15-alpine
+    container_name: postgres-user
+    environment:
+      POSTGRES_DB: micro_user_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: akshay
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_user_data:/var/lib/postgresql/data
+    networks:
+      - microservices-network
+
+  postgres-product:
+    image: postgres:15-alpine
+    container_name: postgres-product
+    environment:
+      POSTGRES_DB: micro_product_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: akshay
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_product_data:/var/lib/postgresql/data
+    networks:
+      - microservices-network
+
+  postgres-order:
+    image: postgres:15-alpine
+    container_name: postgres-order
+    environment:
+      POSTGRES_DB: micro_order_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: akshay
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_order_data:/var/lib/postgresql/data
+    networks:
+      - microservices-network
+
+  postgres-payment:
+    image: postgres:15-alpine
+    container_name: postgres-payment
+    environment:
+      POSTGRES_DB: micro_payment_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: akshay
+    ports:
+      - "5435:5432"
+    volumes:
+      - postgres_payment_data:/var/lib/postgresql/data
+    networks:
+      - microservices-network
+
+  eureka-server:
+    build: ./eureka-server/eureka-server
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    networks:
+      - microservices-network
+
+  user-service:
+    build: ./user-service/user-service
+    container_name: user-service
+    depends_on:
+      - postgres-user
+      - eureka-server
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-user:5432/micro_user_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: akshay
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
+    ports:
+      - "8089:8089"
+    networks:
+      - microservices-network
+
+  product-service:
+    build: ./product-service
+    container_name: product-service
+    depends_on:
+      - postgres-product
+      - eureka-server
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-product:5432/micro_product_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: akshay
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
+    ports:
+      - "8086:8086"
+    networks:
+      - microservices-network
+
+  order-service:
+    build: ./order-service/order-service
+    container_name: order-service
+    depends_on:
+      - postgres-order
+      - eureka-server
+      - user-service
+      - product-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-order:5432/micro_order_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: akshay
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
+    ports:
+      - "8090:8090"
+    networks:
+      - microservices-network
+
+  payment-service:
+    build: ./payment-service
+    container_name: payment-service
+    depends_on:
+      - postgres-payment
+      - eureka-server
+      - order-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-payment:5432/micro_payment_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: akshay
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
+    ports:
+      - "8087:8087"
+    networks:
+      - microservices-network
+
+  api-gateway:
+    build: ./api-gateway/api-gateway
+    container_name: api-gateway
+    depends_on:
+      - eureka-server
+      - user-service
+      - product-service
+      - order-service
+      - payment-service
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
+    ports:
+      - "8070:8070"
+    networks:
+      - microservices-network
+
+networks:
+  microservices-network:
+    driver: bridge
+
+volumes:
+  postgres_user_data:
+  postgres_product_data:
+  postgres_order_data:
+  postgres_payment_data:
