@@ -161,7 +161,7 @@ public class PaymentService {
             return userClient.getUser(1L); // For now, fetch user by ID
         } catch (Exception e) {
             Map<String, String> error = new HashMap<>();
-            error.put("error", "User service unavailable");
+            error.put("error", "User service unavailable as of now");
             return error;
         }
     }
