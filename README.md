@@ -1,4 +1,3 @@
-
 ## 🛠️ Technologies Used
 
 | Category | Technology |
@@ -13,7 +12,8 @@
 | **Build Tool** | Maven |
 | **Java Version** | 21 |
 | **API Documentation** | Swagger / OpenAPI 3.0 |
-
+| **Testing** | JUnit 5, Mockito |
+| **Coverage Report** | Jacoco |
 
 ## 📦 Services
 
@@ -39,31 +39,29 @@ Each service has interactive API documentation:
 
 > **Note:** Click "Try it out" button on Swagger UI to test APIs directly from your browser!
 
-## 🔄 Inter-Service Communication
+## 🧪 Unit Testing
 
-- **Order Service → User Service**: Fetches user details for orders
-- **Order Service → Product Service**: Fetches product details for orders
-- **Payment Service → Order Service**: Verifies order existence
+Each service has comprehensive unit tests using **JUnit 5** and **Mockito**.
 
-## 🚀 Running the Project
+### Test Coverage
 
-### Prerequisites
-- Docker Desktop installed
-- 8GB RAM minimum
-- Git (optional, for cloning)
+| Service | Test Class | Test Count |
+|---------|------------|------------|
+| **User Service** | UserServiceTest, UserControllerTest | 11 tests |
+| **Product Service** | ProductServiceTest, ProductControllerTest | 14 tests |
+| **Order Service** | OrderServiceTest, OrderControllerTest | 22 tests |
+| **Payment Service** | PaymentServiceTest, PaymentControllerTest | 21 tests |
+| **TOTAL** | - | **68 tests** |
 
-### Option 1: Run with Docker (Recommended)
+### Run Tests
 
 ```bash
-# Clone the repository
-git clone https://github.com/Akshaynr014/microservices-project.git
-cd microservices-project
+# Run tests for all services
+cd user-service && mvn test
+cd ../product-service && mvn test
+cd ../order-service && mvn test
+cd ../payment-service && mvn test
 
-# Start all services
-docker-compose up -d
-
-# Verify all containers are running
-docker-compose ps
-
-# View logs
-docker-compose logs -f
+# Run tests for a specific service
+cd user-service
+mvn test
