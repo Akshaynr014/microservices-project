@@ -26,4 +26,11 @@ public class Product {
 
     @Column(nullable = false)
     private Integer stock;
+
+    @Column(nullable = true)                  // ✅ ADD THIS
+    private String category;
+
+    // Add this field
+    @Column(name = "image_url")
+    private String imageUrl;
 }

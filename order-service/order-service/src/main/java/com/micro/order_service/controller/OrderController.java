@@ -85,4 +85,14 @@ public class OrderController {
     public Order updateOrder(@PathVariable Long id, @RequestBody Order order) {
         return service.updateOrder(id, order);
     }
+
+    @PutMapping("/{id}/cancel")
+    public Order cancelOrder(@PathVariable Long id) {
+        Order order = service.getById(id);
+        if (order.getStatus().equals("PENDING")) {
+            order.setStatus("CANCELLED");
+            return service.save(order);
+        }
+        throw new RuntimeException("Order cannot be cancelled");
+    }
 }

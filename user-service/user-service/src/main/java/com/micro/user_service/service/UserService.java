@@ -41,4 +41,9 @@ public class UserService {
 
         return repository.save(user);
     }
+
+    public User getUserByEmail(String email) {
+        return repository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+    }
 }

@@ -20,9 +20,14 @@ public class ProductService {
         return repository.findAll();
     }
 
+    // ✅ ADD THIS - Get products by category
+    public List<Product> getProductsByCategory(String category) {
+        return repository.findByCategory(category);
+    }
+
     public Product getProductById(Long id) {
         return repository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
     }
 
     public Product updateProduct(Long id, Product productDetails) {
@@ -31,6 +36,8 @@ public class ProductService {
         product.setDescription(productDetails.getDescription());
         product.setPrice(productDetails.getPrice());
         product.setStock(productDetails.getStock());
+        product.setCategory(productDetails.getCategory());  // ✅ ADD THIS
+        product.setImageUrl(productDetails.getImageUrl());  // ✅ ADD THIS
         return repository.save(product);
     }
 

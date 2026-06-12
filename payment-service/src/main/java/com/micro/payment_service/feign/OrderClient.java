@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(name = "ORDER-SERVICE")
 public interface OrderClient {
-    
+
     @GetMapping("/orders/{id}")
     Object getOrder(@PathVariable("id") Long id);
-    
+
     @PutMapping("/orders/{id}/status")
     Object updateOrderStatus(@PathVariable("id") Long id, @RequestParam("status") String status);
 }

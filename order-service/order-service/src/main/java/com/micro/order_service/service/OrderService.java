@@ -182,4 +182,9 @@ public class OrderService {
 
         return repo.save(order);
     }
+
+    public Order getById(Long id) {
+        return repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found with id: " + id));
+    }
 }
