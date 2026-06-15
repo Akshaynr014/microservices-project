@@ -4,6 +4,17 @@ import API from '../services/api';
 import { useCart } from '../context/CartContext';
 import ProductReviews from './ProductReviews';
 
+const defaultImage =
+  'data:image/svg+xml;utf8,' +
+  encodeURIComponent(`
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480">
+      <rect width="640" height="480" fill="#f1f5f9"/>
+      <rect x="160" y="120" width="320" height="240" rx="28" fill="#e2e8f0"/>
+      <circle cx="252" cy="205" r="42" fill="#cbd5e1"/>
+      <path d="M178 338l98-104 70 72 48-48 78 80z" fill="#94a3b8"/>
+      <text x="320" y="402" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" fill="#64748b">Product image</text>
+    </svg>
+  `);
 
 // Load Razorpay script
 const loadRazorpayScript = () => {
@@ -20,7 +31,6 @@ function ProductCard({ product, onOrderPlaced }) {
   const { addToCart } = useCart();
   const [showModal, setShowModal] = useState(false);
   const [quantity, setQuantity] = useState(1);
-  const [loading, setLoading] = useState(false);
   const [creatingOrder, setCreatingOrder] = useState(false);
 
   const totalAmount = product.price * quantity;
@@ -55,12 +65,11 @@ function ProductCard({ product, onOrderPlaced }) {
       }
 
       // Get user details
-      const token = localStorage.getItem('token');
       const userStr = localStorage.getItem('user');
       let user;
       try {
         user = JSON.parse(userStr);
-      } catch (err) {
+      } catch {
         toast.error('Session error');
         setCreatingOrder(false);
         return;
@@ -236,8 +245,8 @@ function ProductCard({ product, onOrderPlaced }) {
       )}
 
       {/* Product Card */}
-      <div className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow group flex flex-col">
-        <div className="relative h-48 overflow-hidden cursor-pointer bg-slate-50 flex items-center justify-center" onClick={handleBuyNow}>
+      <div className="group flex h-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
+        <div className="relative flex h-48 cursor-pointer items-center justify-center overflow-hidden bg-slate-50" onClick={handleBuyNow}>
           <img 
             src={productImage} 
             alt={product.name}
@@ -246,7 +255,7 @@ function ProductCard({ product, onOrderPlaced }) {
               e.target.src = defaultImage;
             }}
           />
-          <button className="absolute top-2 right-2 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md hover:bg-gray-100 transition">
+          <button className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-white/95 shadow-md transition hover:bg-white">
             <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
                 d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
@@ -254,12 +263,12 @@ function ProductCard({ product, onOrderPlaced }) {
           </button>
         </div>
         
-        <div className="p-4 flex-1 flex flex-col">
+        <div className="flex flex-1 flex-col p-4">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-bold text-gray-800 truncate pr-2">{product.name}</h3>
-            <div className="flex items-center gap-1 shrink-0">
-              <span className="text-yellow-400">★</span>
-              <span className="text-sm text-gray-600">4.5</span>
+            <div className="flex shrink-0 items-center gap-1 rounded-full bg-amber-50 px-2 py-1">
+              <span className="text-sm font-bold text-amber-500">★</span>
+              <span className="text-xs font-semibold text-amber-700">4.5</span>
             </div>
           </div>
           <p className="text-gray-500 text-sm mt-1 line-clamp-2 flex-1">{product.description || 'No description available'}</p>
@@ -280,14 +289,14 @@ function ProductCard({ product, onOrderPlaced }) {
             <button
               onClick={handleAddToCart}
               disabled={product.stock === 0}
-              className="flex-1 bg-white border-2 border-indigo-600 text-indigo-600 py-2 rounded-lg font-medium hover:bg-indigo-50 transition disabled:opacity-50"
+              className="flex-1 rounded-lg border border-blue-600 bg-white py-2 font-medium text-blue-700 transition hover:bg-blue-50 disabled:opacity-50"
             >
-              🛒 Add to Cart
+              Add to Cart
             </button>
             <button
               onClick={handleBuyNow}
               disabled={product.stock === 0}
-              className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-medium transition disabled:opacity-50"
+              className="flex-1 rounded-lg bg-blue-600 py-2 font-medium text-white transition hover:bg-blue-700 disabled:opacity-50"
             >
               Buy Now
             </button>

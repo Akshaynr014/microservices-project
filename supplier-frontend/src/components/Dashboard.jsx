@@ -8,6 +8,7 @@ import Breadcrumb from './Breadcrumb';
 import CartIcon from './CartIcon';
 import Newsletter from './Newsletter';
 import API from "../services/api";
+import AiChatBot from "./AiChatBot";
 
 const authService = {
   isAuthenticated: () => !!localStorage.getItem('token'),
@@ -47,18 +48,18 @@ const ACTIVITY_COLORS = {
 };
 
 const CATEGORY_OPTIONS = [
-  { value: 'Electronics',   label: '📱 Electronics' },
-  { value: 'Fashion-Men',   label: '👔 Men\'s Fashion' },
-  { value: 'Fashion-Women', label: '👗 Women\'s Fashion' },
-  { value: 'Food',          label: '🍕 Food & Grocery' },
-  { value: 'Beauty',        label: '💄 Beauty' },
-  { value: 'Home',          label: '🏠 Home & Kitchen' },
-  { value: 'Accessories',   label: '⌚ Accessories' },
-  { value: 'Sports',        label: '⚽ Sports' },
-  { value: 'Books',         label: '📚 Books' },
+  { value: 'Electronics',   label: 'Electronics' },
+  { value: 'Fashion-Men',   label: 'Men\'s Fashion' },
+  { value: 'Fashion-Women', label: 'Women\'s Fashion' },
+  { value: 'Food',          label: 'Food & Grocery' },
+  { value: 'Beauty',        label: 'Beauty' },
+  { value: 'Home',          label: 'Home & Kitchen' },
+  { value: 'Accessories',   label: 'Accessories' },
+  { value: 'Sports',        label: 'Sports' },
+  { value: 'Books',         label: 'Books' },
 ];
 
-// ── Moved OUTSIDE all other components so it never remounts on state change ──
+// Ã¢â€â‚¬Ã¢â€â‚¬ Moved OUTSIDE all other components so it never remounts on state change Ã¢â€â‚¬Ã¢â€â‚¬
 function ModalWrapper({ children }) {
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
@@ -69,16 +70,16 @@ function ModalWrapper({ children }) {
   );
 }
 
-// ── Sidebar nav items ─────────────────────────────────────────────────────────
+// Ã¢â€â‚¬Ã¢â€â‚¬ Sidebar nav items Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 const getNavSections = (isAdmin) => {
   const sections = [
     {
       heading: 'Main',
       items: [
-        { key: 'overview',  icon: '🏠', label: 'Overview'  },
-        { key: 'products',  icon: '🛍️', label: 'Products'  },
-        { key: 'orders',    icon: '🛒', label: 'My Orders' },
-        { key: 'payments',  icon: '💳', label: 'Payments'  },
+        { key: 'overview',  icon: 'HM', label: 'Overview'  },
+        { key: 'products',  icon: 'PR', label: 'Products'  },
+            { key: 'orders',    label: 'My Orders',    icon: 'OR' },
+            { key: 'payments',  label: 'Payments',     icon: 'PY' },
       ],
     },
   ];
@@ -86,24 +87,24 @@ const getNavSections = (isAdmin) => {
     sections.push({
       heading: 'Admin Panel',
       items: [
-        { key: 'admin-products',  icon: '📦', label: 'Manage Products' },
-        { key: 'admin-orders',    icon: '🚚', label: 'Manage Orders'   },
-        { key: 'admin-users',     icon: '👥', label: 'Manage Users'    },
-        { key: 'admin-inventory', icon: '📊', label: 'Inventory'       },
+        { key: 'admin-products',  icon: 'MP', label: 'Manage Products' },
+        { key: 'admin-orders',    icon: 'MO', label: 'Manage Orders'   },
+        { key: 'admin-users',     icon: 'US', label: 'Manage Users'    },
+        { key: 'admin-inventory', icon: 'IN', label: 'Inventory'       },
       ],
     });
   }
   sections.push({
     heading: 'Support',
     items: [
-      { key: 'helpdesk', icon: '🎧', label: 'Help Desk' },
-      { key: 'settings', icon: '⚙️', label: 'Settings'  },
+      { key: 'helpdesk', icon: 'HP', label: 'Help Desk' },
+      { key: 'settings', icon: 'ST', label: 'Settings'  },
     ],
   });
   return sections;
 };
 
-// ── Reusable components ───────────────────────────────────────────────────────
+// Ã¢â€â‚¬Ã¢â€â‚¬ Reusable components Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 function StatCard({ icon, label, value, trend, trendUp, bgColor, iconColor, loading }) {
   return (
     <div className="bg-white rounded-xl border border-slate-200/70 p-4">
@@ -112,7 +113,7 @@ function StatCard({ icon, label, value, trend, trendUp, bgColor, iconColor, load
           <span className={`text-lg ${iconColor}`}>{icon}</span>
         </div>
         <span className={`text-xs px-2 py-1 rounded-full flex items-center gap-1 ${trendUp ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-600'}`}>
-          {trendUp ? '↑' : '↓'} {trend}
+          {trendUp ? 'Up' : 'Down'} {trend}
         </span>
       </div>
       <p className="text-2xl font-semibold text-slate-800">{loading ? '...' : value}</p>
@@ -142,7 +143,7 @@ function CategorySelect({ value, onChange }) {
   );
 }
 
-// ── Image Upload Field (shared between Add and Edit) ──────────────────────────
+// Ã¢â€â‚¬Ã¢â€â‚¬ Image Upload Field (shared between Add and Edit) Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 function ImageUploadField({ imageUrl, onUpload, onRemove }) {
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
@@ -165,7 +166,7 @@ function ImageUploadField({ imageUrl, onUpload, onRemove }) {
     <div className="mb-4">
       <label className="block text-xs font-medium text-slate-600 mb-1">Product Image</label>
       <label className="flex flex-col items-center justify-center w-full h-28 border-2 border-dashed border-slate-300 rounded-lg cursor-pointer hover:border-[#2874f0] hover:bg-blue-50 transition-colors">
-        <span className="text-2xl mb-1">📷</span>
+        <span className="text-xs font-bold text-slate-400 mb-1">IMG</span>
         <span className="text-xs text-slate-500">Click to upload image</span>
         <span className="text-xs text-slate-400 mt-0.5">PNG, JPG up to 5MB</span>
         <input
@@ -185,14 +186,14 @@ function ImageUploadField({ imageUrl, onUpload, onRemove }) {
           <button
             onClick={onRemove}
             className="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white rounded-full text-xs flex items-center justify-center hover:bg-red-600"
-          >✕</button>
+          >x</button>
         </div>
       )}
     </div>
   );
 }
 
-// ── Admin: Products ───────────────────────────────────────────────────────────
+// Ã¢â€â‚¬Ã¢â€â‚¬ Admin: Products Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 function AdminProducts() {
   const [products, setProducts]         = useState([]);
   const [loading, setLoading]           = useState(true);
@@ -270,7 +271,7 @@ function AdminProducts() {
   return (
     <div>
       <div className="flex justify-between items-center mb-5">
-        <h2 className="text-lg font-semibold text-slate-800">📦 Manage Products</h2>
+        <h2 className="text-lg font-semibold text-slate-800">Manage Products</h2>
         <button
           onClick={() => setShowAddModal(true)}
           className="bg-[#2874f0] hover:bg-[#1a5dc8] text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
@@ -279,7 +280,7 @@ function AdminProducts() {
         </button>
       </div>
 
-      {/* ── Add Modal ── */}
+      {/* Ã¢â€â‚¬Ã¢â€â‚¬ Add Modal Ã¢â€â‚¬Ã¢â€â‚¬ */}
       {showAddModal && (
         <ModalWrapper>
           <h3 className="text-lg font-semibold text-slate-800 mb-4">Add Product</h3>
@@ -301,7 +302,7 @@ function AdminProducts() {
           <div className="flex gap-3 mb-3">
             <input
               type="number"
-              placeholder="Price (₹)"
+              placeholder="Price (Rs)"
               value={newProduct.price}
               onChange={e => setNewProduct(p => ({ ...p, price: e.target.value }))}
               className="w-full p-2 border border-slate-200 rounded-lg text-sm"
@@ -343,7 +344,7 @@ function AdminProducts() {
         </ModalWrapper>
       )}
 
-      {/* ── Edit Modal ── */}
+      {/* Ã¢â€â‚¬Ã¢â€â‚¬ Edit Modal Ã¢â€â‚¬Ã¢â€â‚¬ */}
       {editingProduct && (
         <ModalWrapper>
           <h3 className="text-lg font-semibold text-slate-800 mb-4">Edit Product</h3>
@@ -365,7 +366,7 @@ function AdminProducts() {
           <div className="flex gap-3 mb-3">
             <input
               type="number"
-              placeholder="Price (₹)"
+              placeholder="Price (Rs)"
               value={editingProduct.price}
               onChange={e => setEditingProduct(p => ({ ...p, price: e.target.value }))}
               className="w-full p-2 border border-slate-200 rounded-lg text-sm"
@@ -407,7 +408,7 @@ function AdminProducts() {
         </ModalWrapper>
       )}
 
-      {/* ── Products Grid ── */}
+      {/* Ã¢â€â‚¬Ã¢â€â‚¬ Products Grid Ã¢â€â‚¬Ã¢â€â‚¬ */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {products.map(p => (
           <div key={p.id} className="border border-slate-200 rounded-xl p-4 hover:shadow-sm transition-shadow flex flex-col">
@@ -419,7 +420,7 @@ function AdminProducts() {
               />
             ) : (
               <div className="w-full h-32 bg-slate-50 rounded-lg mb-3 border border-slate-100 flex items-center justify-center text-slate-300">
-                <span className="text-2xl">📷</span>
+                <span className="text-xs font-bold text-slate-400">IMG</span>
               </div>
             )}
 
@@ -434,7 +435,7 @@ function AdminProducts() {
             <p className="text-sm text-slate-500 line-clamp-2 flex-1">{p.description}</p>
 
             <div className="mt-3 flex justify-between items-center">
-              <span className="text-[#2874f0] font-bold text-lg">₹{p.price}</span>
+              <span className="text-[#2874f0] font-bold text-lg">Rs {p.price}</span>
               <span className={`text-xs px-2 py-1 rounded-full ${p.stock > 0 ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-600'}`}>
                 {p.stock > 0 ? `Stock: ${p.stock}` : 'Out of stock'}
               </span>
@@ -461,7 +462,7 @@ function AdminProducts() {
   );
 }
 
-// ── Admin: Orders ─────────────────────────────────────────────────────────────
+// Ã¢â€â‚¬Ã¢â€â‚¬ Admin: Orders Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 function AdminOrders() {
   const [orders, setOrders]   = useState([]);
   const [loading, setLoading] = useState(true);
@@ -482,7 +483,7 @@ function AdminOrders() {
   const updateStatus = async (orderId, status) => {
     try {
       await API.put(`/orders/${orderId}/status?status=${status}`);
-      toast.success(`Order #${orderId} → ${status}`);
+      toast.success(`Order #${orderId} updated to ${status}`);
       fetchOrders();
     } catch {
       toast.error('Failed to update status');
@@ -501,7 +502,7 @@ function AdminOrders() {
 
   return (
     <div>
-      <h2 className="text-lg font-semibold text-slate-800 mb-4">🚚 Manage Orders</h2>
+      <h2 className="text-lg font-semibold text-slate-800 mb-4">Manage Orders</h2>
       <div className="space-y-3">
         {orders.map(order => (
           <div key={order.id} className="border border-slate-200 rounded-xl p-4">
@@ -510,7 +511,7 @@ function AdminOrders() {
                 <p className="font-semibold text-slate-800">Order #{order.id}</p>
                 <p className="text-sm text-slate-500 mt-0.5">Product: {order.productDetails?.name || order.productId}</p>
                 <p className="text-sm text-slate-500">User ID: {order.userId}</p>
-                <p className="font-bold text-[#2874f0] mt-1">₹{order.totalAmount}</p>
+                <p className="font-bold text-[#2874f0] mt-1">Rs {order.totalAmount}</p>
               </div>
               <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusColor(order.status)}`}>
                 {order.status || 'PENDING'}
@@ -529,7 +530,7 @@ function AdminOrders() {
   );
 }
 
-// ── Admin: Users ──────────────────────────────────────────────────────────────
+// Ã¢â€â‚¬Ã¢â€â‚¬ Admin: Users Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 function AdminUsers() {
   const [users, setUsers]     = useState([]);
   const [loading, setLoading] = useState(true);
@@ -545,7 +546,7 @@ function AdminUsers() {
 
   return (
     <div>
-      <h2 className="text-lg font-semibold text-slate-800 mb-4">👥 Manage Users</h2>
+      <h2 className="text-lg font-semibold text-slate-800 mb-4">Manage Users</h2>
       <div className="overflow-x-auto rounded-xl border border-slate-200">
         <table className="w-full text-sm">
           <thead className="bg-slate-50 border-b border-slate-200">
@@ -576,7 +577,7 @@ function AdminUsers() {
   );
 }
 
-// ── Main Dashboard ────────────────────────────────────────────────────────────
+// Ã¢â€â‚¬Ã¢â€â‚¬ Main Dashboard Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 function Dashboard() {
   const [activeSection, setActiveSection] = useState("overview");
   const [sidebarOpen, setSidebarOpen]     = useState(true);
@@ -623,6 +624,14 @@ function Dashboard() {
     navigate('/login');
   };
 
+  const handleSearch = () => {
+    const query = searchQuery.trim();
+    setActiveSection('products');
+    if (query) {
+      toast.success(`Showing results for "${query}"`);
+    }
+  };
+
   const userInitials = user?.name
     ? user.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
     : (user?.email?.[0] || 'U').toUpperCase();
@@ -631,14 +640,14 @@ function Dashboard() {
   const allItems     = NAV_SECTIONS.flatMap(s => s.items);
   const activeItem   = allItems.find(i => i.key === activeSection) ?? allItems[0];
 
-  // ── Sidebar ──
+  // Ã¢â€â‚¬Ã¢â€â‚¬ Sidebar Ã¢â€â‚¬Ã¢â€â‚¬
   const Sidebar = (
     <aside
       className={`bg-white border-r border-slate-100 flex flex-col shrink-0 transition-all duration-300 ease-in-out overflow-hidden ${sidebarOpen ? 'w-56' : 'w-16'}`}
       style={{ minHeight: '100%' }}
     >
       <div className={`flex items-center gap-3 px-4 py-4 border-b border-slate-100 ${!sidebarOpen && 'justify-center'}`}>
-        <div className="w-8 h-8 shrink-0 rounded-lg bg-[#2874f0] flex items-center justify-center text-white text-sm font-bold">⚡</div>
+        <div className="w-8 h-8 shrink-0 rounded-lg bg-[#2874f0] flex items-center justify-center text-white text-sm font-bold">MS</div>
         {sidebarOpen && (
           <span className="text-base font-bold text-slate-800 whitespace-nowrap">
             <span className="text-[#2874f0]">Micro</span>Shop
@@ -664,7 +673,9 @@ function Dashboard() {
                     ${isActive ? 'bg-blue-50 text-[#2874f0]' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700'}
                     ${!sidebarOpen && 'justify-center'}`}
                 >
-                  <span className="text-base shrink-0">{item.icon}</span>
+                  <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-[10px] font-bold ${isActive ? 'bg-[#2874f0] text-white' : 'bg-slate-100 text-slate-500'}`}>
+                    {item.icon}
+                  </span>
                   {sidebarOpen && <span className="truncate">{item.label}</span>}
                   {sidebarOpen && isActive && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-[#2874f0] shrink-0" />}
                 </button>
@@ -694,7 +705,7 @@ function Dashboard() {
     </aside>
   );
 
-  // ── Content renderer ──
+  // Ã¢â€â‚¬Ã¢â€â‚¬ Content renderer Ã¢â€â‚¬Ã¢â€â‚¬
   const renderContent = () => {
     switch (activeSection) {
       case 'overview':
@@ -706,7 +717,7 @@ function Dashboard() {
             <div className="bg-[#2874f0] rounded-xl px-7 py-6 flex items-center justify-between overflow-hidden relative">
               <div className="relative z-10">
                 <span className="inline-block bg-white/20 border border-white/30 text-white text-xs px-3 py-1 rounded-full mb-2">
-                  🔥 Summer Sale 2026
+                  Summer Sale 2026
                 </span>
                 <h2 className="text-white text-xl font-bold mb-1">Big Billion Days are here!</h2>
                 <p className="text-blue-100 text-sm mb-4">Exclusive deals on electronics, fashion & home. Up to 80% off.</p>
@@ -716,7 +727,7 @@ function Dashboard() {
                 </div>
               </div>
               <div className="text-white opacity-10 text-8xl absolute right-10 top-1/2 -translate-y-1/2 flex gap-4 pointer-events-none select-none">
-                🛒🏷️🎁
+                MicroShop Deals
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
@@ -725,24 +736,24 @@ function Dashboard() {
                   <p className="text-sm font-semibold text-blue-800">New in Electronics</p>
                   <p className="text-xs text-blue-500 mt-0.5">Laptops, phones & more</p>
                 </div>
-                <span className="text-3xl">💻</span>
+                <span className="rounded-full bg-white px-3 py-2 text-xs font-bold text-slate-500">New</span>
               </div>
               <div className="bg-orange-50 border border-orange-100 rounded-xl p-4 flex items-center justify-between">
                 <div>
                   <p className="text-sm font-semibold text-orange-800">Fashion Week Deals</p>
                   <p className="text-xs text-orange-500 mt-0.5">Flat 60% on top brands</p>
                 </div>
-                <span className="text-3xl">👗</span>
+                <span className="rounded-full bg-white px-3 py-2 text-xs font-bold text-slate-500">New</span>
               </div>
             </div>
-            <ProductCatalog />
+            <ProductCatalog searchQuery={searchQuery} />
           </div>
         );
 
       case 'orders':
         return (
           <div>
-            <SectionHeader icon="🛒" title="My orders" subtitle="View your order history and track shipments" />
+            <SectionHeader icon="OR" title="My orders" subtitle="View your order history and track shipments" />
             <OrderList />
           </div>
         );
@@ -750,7 +761,7 @@ function Dashboard() {
       case 'payments':
         return (
           <div>
-            <SectionHeader icon="💳" title="Payment history" subtitle="All your transactions in one place" />
+            <SectionHeader icon="PY" title="Payment history" subtitle="All your transactions in one place" />
             <PaymentList />
           </div>
         );
@@ -758,7 +769,9 @@ function Dashboard() {
       case 'admin-products':  return <AdminProducts />;
       case 'admin-orders':    return <AdminOrders />;
       case 'admin-users':     return <AdminUsers />;
-      case 'admin-inventory': return <ComingSoon icon="📊" label="Inventory Management" />;
+      case 'admin-inventory': return <InventorySection stats={stats} loading={loading} setActiveSection={setActiveSection} />;
+      case 'helpdesk':        return <HelpDeskSection setActiveSection={setActiveSection} />;
+      case 'settings':        return <SettingsSection user={user} handleLogout={handleLogout} />;
       default:                return <ComingSoon icon={activeItem.icon} label={activeItem.label} />;
     }
   };
@@ -766,7 +779,7 @@ function Dashboard() {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
 
-      {/* ── Header ── */}
+      {/* Ã¢â€â‚¬Ã¢â€â‚¬ Header Ã¢â€â‚¬Ã¢â€â‚¬ */}
       <header className="bg-[#2874f0] sticky top-0 z-20 shrink-0">
         <div className="px-4 py-2.5 flex items-center gap-3">
           <button
@@ -780,7 +793,7 @@ function Dashboard() {
           </button>
 
           <span className="text-white font-bold text-lg whitespace-nowrap shrink-0 hidden sm:block">
-            ⚡ <span className="text-yellow-300">Micro</span>Shop
+            <span className="text-yellow-300">Micro</span>Shop
           </span>
 
           <div className="flex flex-1 max-w-2xl bg-white rounded-sm overflow-hidden h-9 mx-2">
@@ -788,18 +801,25 @@ function Dashboard() {
               type="text"
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
+              onKeyDown={e => {
+                if (e.key === 'Enter') handleSearch();
+              }}
               placeholder="Search products, brands and more..."
               className="flex-1 px-3 text-sm text-slate-700 outline-none"
             />
-            <button className="bg-yellow-400 hover:bg-yellow-500 px-4 text-slate-800 transition-colors font-medium text-sm">
-              🔍
+            <button
+              type="button"
+              onClick={handleSearch}
+              className="bg-yellow-400 hover:bg-yellow-500 px-4 text-slate-800 transition-colors font-medium text-sm"
+            >
+              Search
             </button>
           </div>
 
           <div className="flex items-center gap-2 shrink-0 ml-auto">
             <CartIcon />
             <div className="relative cursor-pointer p-1">
-              <span className="text-white text-lg">🔔</span>
+              <span className="text-xs font-bold text-white">N</span>
               <span className="absolute top-0.5 right-0.5 w-2 h-2 bg-orange-400 rounded-full border border-white" />
             </div>
             <div className="hidden sm:flex items-center gap-2 cursor-pointer hover:bg-white/10 px-2 py-1 rounded transition-colors">
@@ -822,10 +842,10 @@ function Dashboard() {
 
         <div className="bg-[#1a5dc8] px-4 flex gap-0.5 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
           {[
-            { key: 'overview',  label: 'Home',         icon: '🏠' },
-            { key: 'products',  label: 'All Products', icon: '🏪' },
-            { key: 'orders',    label: 'My Orders',    icon: '🛒' },
-            { key: 'payments',  label: 'Payments',     icon: '💳' },
+            { key: 'overview',  label: 'Home',         icon: 'HM' },
+            { key: 'products',  label: 'All Products', icon: 'PR' },
+            { key: 'orders',    label: 'My Orders',    icon: 'OR' },
+            { key: 'payments',  label: 'Payments',     icon: 'PY' },
           ].map(item => (
             <button
               key={item.key}
@@ -841,7 +861,7 @@ function Dashboard() {
         </div>
       </header>
 
-      {/* ── Body ── */}
+      {/* Ã¢â€â‚¬Ã¢â€â‚¬ Body Ã¢â€â‚¬Ã¢â€â‚¬ */}
       <div className="flex flex-1 overflow-hidden">
         {Sidebar}
         <main className="flex-1 overflow-y-auto">
@@ -869,18 +889,243 @@ function Dashboard() {
           </div>
         </main>
       </div>
+            <AiChatBot />
     </div>
   );
 }
 
-// ── Overview section ──────────────────────────────────────────────────────────
+// Ã¢â€â‚¬Ã¢â€â‚¬ Overview section Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+function HelpDeskSection({ setActiveSection }) {
+  const supportCards = [
+    {
+      title: 'AI Assistant',
+      text: 'Use the chat button in the bottom-right corner for product, order, and payment questions.',
+      action: 'Ask assistant',
+      onClick: () => toast.success('Open the MicroShop Assistant from the bottom-right chat button.'),
+    },
+    {
+      title: 'Track Orders',
+      text: 'View order status, history, and shipment tracking from your order list.',
+      action: 'View orders',
+      onClick: () => setActiveSection('orders'),
+    },
+    {
+      title: 'Payment Support',
+      text: 'Check payment status, failed transactions, refunds, and order payment history.',
+      action: 'View payments',
+      onClick: () => setActiveSection('payments'),
+    },
+  ];
+
+  return (
+    <div className="space-y-6">
+      <SectionHeader
+        icon="HP"
+        title="Help Desk"
+        subtitle="Fast support shortcuts for shopping, orders, payments, and AI help"
+      />
+
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        {supportCards.map((card) => (
+          <div key={card.title} className="rounded-xl border border-slate-200 bg-white p-5">
+            <h3 className="text-sm font-semibold text-slate-800">{card.title}</h3>
+            <p className="mt-2 min-h-[60px] text-sm leading-relaxed text-slate-500">{card.text}</p>
+            <button
+              type="button"
+              onClick={card.onClick}
+              className="mt-4 rounded-lg bg-blue-600 px-4 py-2 text-xs font-semibold text-white transition hover:bg-blue-700"
+            >
+              {card.action}
+            </button>
+          </div>
+        ))}
+      </div>
+
+      <div className="rounded-xl border border-blue-100 bg-blue-50 p-5">
+        <h3 className="text-sm font-semibold text-blue-900">Common fixes</h3>
+        <div className="mt-3 grid grid-cols-1 gap-3 text-sm text-blue-800 md:grid-cols-2">
+          <p>Order not visible? Refresh the Orders tab after placing payment.</p>
+          <p>Payment pending? Wait for Razorpay confirmation before closing checkout.</p>
+          <p>Need products? Use the top search or open Products and choose a category.</p>
+          <p>AI quota reached? Order and payment help still works from this Help Desk.</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SettingsSection({ user, handleLogout }) {
+  const [settings, setSettings] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('microshop-settings') || 'null') || {
+        emailUpdates: true,
+        orderAlerts: true,
+        compactMode: false,
+      };
+    } catch {
+      return {
+        emailUpdates: true,
+        orderAlerts: true,
+        compactMode: false,
+      };
+    }
+  });
+
+  const updateSetting = (key) => {
+    setSettings((current) => {
+      const next = { ...current, [key]: !current[key] };
+      localStorage.setItem('microshop-settings', JSON.stringify(next));
+      toast.success('Settings saved');
+      return next;
+    });
+  };
+
+  const clearLocalCart = () => {
+    localStorage.removeItem('cart');
+    toast.success('Local cart cache cleared');
+  };
+
+  return (
+    <div className="space-y-6">
+      <SectionHeader
+        icon="ST"
+        title="Settings"
+        subtitle="Manage your local preferences and account session"
+      />
+
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <div className="rounded-xl border border-slate-200 bg-white p-5">
+          <h3 className="text-sm font-semibold text-slate-800">Profile</h3>
+          <div className="mt-4 space-y-3 text-sm">
+            <div className="flex justify-between gap-4">
+              <span className="text-slate-400">Name</span>
+              <span className="font-medium text-slate-700">{user?.name || 'Not provided'}</span>
+            </div>
+            <div className="flex justify-between gap-4">
+              <span className="text-slate-400">Email</span>
+              <span className="font-medium text-slate-700">{user?.email || 'Not provided'}</span>
+            </div>
+            <div className="flex justify-between gap-4">
+              <span className="text-slate-400">Role</span>
+              <span className="font-medium text-slate-700">{user?.role || 'USER'}</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="rounded-xl border border-slate-200 bg-white p-5">
+          <h3 className="text-sm font-semibold text-slate-800">Preferences</h3>
+          <div className="mt-4 space-y-3">
+            {[
+              ['emailUpdates', 'Email updates'],
+              ['orderAlerts', 'Order alerts'],
+              ['compactMode', 'Compact dashboard mode'],
+            ].map(([key, label]) => (
+              <button
+                key={key}
+                type="button"
+                onClick={() => updateSetting(key)}
+                className="flex w-full items-center justify-between rounded-lg border border-slate-200 px-4 py-3 text-left text-sm transition hover:bg-slate-50"
+              >
+                <span className="font-medium text-slate-700">{label}</span>
+                <span className={`rounded-full px-3 py-1 text-xs font-semibold ${settings[key] ? 'bg-green-50 text-green-700' : 'bg-slate-100 text-slate-500'}`}>
+                  {settings[key] ? 'On' : 'Off'}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="rounded-xl border border-slate-200 bg-white p-5">
+        <h3 className="text-sm font-semibold text-slate-800">Account actions</h3>
+        <div className="mt-4 flex flex-wrap gap-3">
+          <button
+            type="button"
+            onClick={clearLocalCart}
+            className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50"
+          >
+            Clear cart cache
+          </button>
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="rounded-lg bg-red-50 px-4 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-100"
+          >
+            Sign out
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function InventorySection({ stats, loading, setActiveSection }) {
+  const inventoryItems = [
+    { label: 'Products listed', value: stats.products, tone: 'blue' },
+    { label: 'Orders to review', value: stats.orders, tone: 'amber' },
+    { label: 'Payment records', value: stats.payments, tone: 'green' },
+  ];
+
+  const toneClasses = {
+    blue: 'bg-blue-50 text-blue-700 border-blue-100',
+    amber: 'bg-amber-50 text-amber-700 border-amber-100',
+    green: 'bg-green-50 text-green-700 border-green-100',
+  };
+
+  return (
+    <div className="space-y-6">
+      <SectionHeader
+        icon="IN"
+        title="Inventory"
+        subtitle="Quick inventory snapshot and admin shortcuts"
+      />
+
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        {inventoryItems.map((item) => (
+          <div key={item.label} className={`rounded-xl border p-5 ${toneClasses[item.tone]}`}>
+            <p className="text-xs font-semibold uppercase tracking-wide opacity-70">{item.label}</p>
+            <p className="mt-2 text-3xl font-bold">{loading ? '...' : item.value.toLocaleString()}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="rounded-xl border border-slate-200 bg-white p-5">
+        <h3 className="text-sm font-semibold text-slate-800">Inventory actions</h3>
+        <div className="mt-4 flex flex-wrap gap-3">
+          <button
+            type="button"
+            onClick={() => setActiveSection('admin-products')}
+            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
+          >
+            Manage products
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveSection('admin-orders')}
+            className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50"
+          >
+            Review orders
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveSection('products')}
+            className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50"
+          >
+            View storefront
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function OverviewSection({ stats, loading, maxOrders }) {
   return (
     <div className="space-y-5">
       <div className="bg-[#2874f0] rounded-xl px-7 py-5 flex items-center justify-between overflow-hidden relative">
         <div className="relative z-10">
           <span className="inline-block bg-white/20 border border-white/30 text-white text-xs px-3 py-1 rounded-full mb-2">
-            Summer Sale 2026
+                  Summer Sale 2026
           </span>
           <h2 className="text-white text-xl font-bold mb-1">Big Billion Days are here!</h2>
           <p className="text-blue-100 text-sm mb-4">Exclusive deals on electronics, fashion & home. Up to 80% off.</p>
@@ -890,22 +1135,22 @@ function OverviewSection({ stats, loading, maxOrders }) {
           </div>
         </div>
         <div className="text-white opacity-10 text-8xl absolute right-10 top-1/2 -translate-y-1/2 flex gap-4 pointer-events-none select-none">
-          🛒🏷️🎁
+                MicroShop Deals
         </div>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <StatCard icon="👤" label="Total users"     value={stats.users.toLocaleString()}    trend="12%" trendUp         loading={loading} bgColor="bg-blue-50"   iconColor="text-[#2874f0]" />
-        <StatCard icon="📦" label="Products listed" value={stats.products.toLocaleString()} trend="5%"  trendUp         loading={loading} bgColor="bg-green-50"  iconColor="text-green-700" />
-        <StatCard icon="🛍️" label="Orders placed"  value={stats.orders.toLocaleString()}   trend="3%"  trendUp={false} loading={loading} bgColor="bg-amber-50"  iconColor="text-amber-700" />
-        <StatCard icon="💳" label="Payments"        value={stats.payments.toLocaleString()} trend="18%" trendUp         loading={loading} bgColor="bg-orange-50" iconColor="text-orange-600" />
+        <StatCard icon="US" label="Total users" value={stats.users.toLocaleString()} trend="12%" trendUp loading={loading} bgColor="bg-blue-50" iconColor="text-[#2874f0]" />
+        <StatCard icon="PR" label="Products listed" value={stats.products.toLocaleString()} trend="5%" trendUp loading={loading} bgColor="bg-green-50" iconColor="text-green-700" />
+        <StatCard icon="OR" label="Orders placed" value={stats.orders.toLocaleString()} trend="3%" trendUp={false} loading={loading} bgColor="bg-amber-50" iconColor="text-amber-700" />
+        <StatCard icon="PY" label="Payments" value={stats.payments.toLocaleString()} trend="18%" trendUp loading={loading} bgColor="bg-orange-50" iconColor="text-orange-600" />
       </div>
 
       <div className="grid grid-cols-3 gap-4">
         <div className="col-span-2 bg-slate-50 border border-slate-200/70 rounded-xl p-5">
           <div className="flex items-center justify-between mb-4">
             <p className="text-sm font-medium text-slate-800">Weekly order volume</p>
-            <button className="text-xs text-[#2874f0] border border-slate-200 rounded-lg px-3 py-1.5 bg-white hover:bg-slate-50">This month ▾</button>
+            <button className="text-xs text-[#2874f0] border border-slate-200 rounded-lg px-3 py-1.5 bg-white hover:bg-slate-50">This month</button>
           </div>
           <div className="flex items-end gap-2 h-24 pt-2">
             {WEEKLY_DATA.map(({ day, orders, peak }) => (
