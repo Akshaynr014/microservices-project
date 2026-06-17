@@ -7,7 +7,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 @Configuration
 public class CorsConfig {
@@ -19,15 +21,15 @@ public class CorsConfig {
     public CorsWebFilter corsWebFilter() {
         CorsConfiguration corsConfig = new CorsConfiguration();
 
-        corsConfig.setAllowedOrigins(Arrays.asList(
-                "http://localhost:5173",
-                "https://microservices-project-53xqdcvoj-akshaynr014s-projects.vercel.app",
-                "https://microservices-project-nu.vercel.app",
-                frontendUrl
-        ));
+        Set<String> origins = new LinkedHashSet<>();
+        origins.add("http://localhost:5173");
+        origins.add("https://microservices-project-53xqdcvoj-akshaynr014s-projects.vercel.app");
+        origins.add("https://microservices-project-nu.vercel.app");
+        origins.add(frontendUrl);
 
-        corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        corsConfig.setAllowedHeaders(Arrays.asList("*"));
+        corsConfig.setAllowedOrigins(List.copyOf(origins));
+        corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        corsConfig.setAllowedHeaders(List.of("*"));
         corsConfig.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
